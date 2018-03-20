@@ -1,0 +1,6 @@
+# This file uses centimeters as units for non-parametric coordinates.
+g tri
+v 0 0 0
+v 1 0 0
+v 1 1 0
+f 1 2 3

@@ -5,9 +5,11 @@ using UnityEngine;
 public class ColliidesWithObjects : MonoBehaviour {
 
 	private PlayerController playerController;
+	GameController gc;
 
 	void Start(){
 		playerController = GetComponent<PlayerController> ();
+		gc = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
@@ -23,6 +25,7 @@ public class ColliidesWithObjects : MonoBehaviour {
 
 		if (other.tag == "Threat") {
 			Destroy (gameObject);
+			gc.setGameover ();
 		}
 	}
 }

@@ -18,8 +18,13 @@ public class PlayerController : MonoBehaviour {
 
 	private float currentTotalWeight;
 
+	GameController gc;
+
+
 	// Use this for initialization
 	void Start () {
+
+		gc = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 		rb = GetComponent<Rigidbody2D> ();
 		jetpack = GetComponentsInChildren<JetpackController> () [0];
 
@@ -31,14 +36,16 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButton("Jump") && jetpack.getCurrentFuel() > 0){
-			rb.AddForce (new Vector2 (0, upwardForce));
-			jetpack.FireJetpack ();
+		if (!gc.isGameOver ()) {
+			if (Input.GetButton ("Jump") && jetpack.getCurrentFuel () > 0) {
+				rb.AddForce (new Vector2 (0, upwardForce));
+				jetpack.FireJetpack ();
+			}
+
+			Stabilize ();
+
+			SetWeight ();
 		}
-
-		Stabilize ();
-
-		SetWeight ();
 	}
 
 	void Stabilize(){
@@ -47,6 +54,7 @@ public class PlayerController : MonoBehaviour {
 
 	public void Refuel(){
 		jetpack.Refuel();
+		carriedCoinWeight = 0.0f;
 	}
 
 	public void PickupCoin(CoinAttributes coin){

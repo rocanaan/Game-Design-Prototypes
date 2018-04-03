@@ -25,6 +25,10 @@ public class PlayerController : MonoBehaviour {
 	public int maxHealth;
 	private int currentHealth;
 
+	public float timeStunned;
+	private float timeRecoverStun;
+	public float speedStunned;
+
 	private GameController gameController;
 
 	// Script for doing the on damage blinking animation
@@ -34,6 +38,7 @@ public class PlayerController : MonoBehaviour {
 	private HealthTracker healthTracker;
 
 	private bool isDead;
+	private bool isStunned;
 	private bool respawnAllowed;
 	private float nextRespawnTime;
 	//private Vector3 nextRespawnLocation;
@@ -62,6 +67,8 @@ public class PlayerController : MonoBehaviour {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 
 		isDead = false;
+		isStunned = false;
+		timeRecoverStun = 0.0f;
 		
 	}
 	
@@ -81,7 +88,12 @@ public class PlayerController : MonoBehaviour {
 				// probably a good idea to go ahead and refactor the player scripts
 			}
 
-			if (!isDead) {
+			if (isStunned) {
+				if (timeRecoverStun < Time.time) {
+					isStunned = false;
+				}
+			}
+			else if (!isDead) {
 				if (controllerName != "Keyboard" || gameController.getCurrentKeyboardInput () == playerID) {
 					getInputs ();
 				}
@@ -186,6 +198,7 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	//TODO: Implement grace period. Righ now, using OnTriggerEnter, boss can park on top of a cornered player, and using OnTriggerStay, boss insta-kills him
 	void OnTriggerEnter2D(Collider2D col){
 		if (col.tag == "Shot") {
 			ShotAttributes shot = col.GetComponent<ShotAttributes> ();
@@ -203,6 +216,18 @@ public class PlayerController : MonoBehaviour {
 			}
 			healthTracker.setHealth (currentHealth);
 			Destroy (col.gameObject);
+		}
+
+		if (col.tag == "Boss") {
+			takeDamage (1);
+			isStunned = true;
+			timeRecoverStun = Time.time + timeStunned;
+
+			Vector3 offset = transform.position - col.transform.position;
+			Vector3 direction = offset.normalized;
+			rb.velocity = direction * speedStunned;
+
+
 		}
 	}
 

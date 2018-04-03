@@ -8,6 +8,7 @@ TagManager:
   - Ghost
   - Pickup
   - Hill
+  - Boss
   layers:
   - Default
   - TransparentFX

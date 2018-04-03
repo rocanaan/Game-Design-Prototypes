@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{9F3E7975-C002-B353-CD22-768D5EB18018}</ProjectGuid>
+    <ProjectGuid>{10A146B3-5092-EEAF-6DE9-02CACE548D46}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -51,6 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\_Scripts\Boss Behaviors\BossBehavior.cs" />
+     <Compile Include="Assets\_Scripts\Boss Behaviors\BossController.cs" />
+     <Compile Include="Assets\_Scripts\Boss Behaviors\FollowBehavior.cs" />
+     <Compile Include="Assets\_Scripts\Boss Behaviors\ShieldSpawner.cs" />
+     <Compile Include="Assets\_Scripts\Boss Behaviors\WanderBehavior.cs" />
      <Compile Include="Assets\_Scripts\CollisionWithBoundary.cs" />
      <Compile Include="Assets\_Scripts\CollisionWithWall.cs" />
      <Compile Include="Assets\_Scripts\DestroyByShot.cs" />
@@ -67,6 +72,7 @@
      <Compile Include="Assets\_Scripts\Player\ShotAttributes.cs" />
      <Compile Include="Assets\_Scripts\playerEntersTarget.cs" />
      <Compile Include="Assets\_Scripts\StartingPosition.cs" />
+     <Compile Include="Assets\GunSpawner.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

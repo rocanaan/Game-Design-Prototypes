@@ -11,6 +11,9 @@ public class WanderBehavior : BossBehavior {
 	public float y_range;
 	public float speed;
 
+	public enum Dimension{both,x,y};
+	public Dimension dim;
+
 	public float offsetTolerance;
 
 
@@ -37,6 +40,14 @@ public class WanderBehavior : BossBehavior {
 	}
 
 	private void getNewTarget(){
-		target = new Vector3 (Random.Range (-x_range, x_range), Random.Range (-y_range, y_range), transform.position.z);
+		if (dim == Dimension.both) {
+			target = new Vector3 (Random.Range (-x_range, x_range), Random.Range (-y_range, y_range), transform.position.z);
+		} else if (dim == Dimension.x) {
+			target = new Vector3 (Random.Range (-x_range, x_range), transform.position.y, transform.position.z);
+		} else if (dim == Dimension.y) {
+			target = new Vector3 (transform.position.x, Random.Range (-y_range, y_range), transform.position.z);
+		}
+
 	}
+		
 }

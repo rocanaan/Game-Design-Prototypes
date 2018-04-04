@@ -14,7 +14,10 @@ public class GameController : MonoBehaviour {
 		//Deathmatch,
 		KOTH,
 		Tutorial,
+		Boss,
 	};
+
+	private int totalDeaths;
 
 	public GameMode gameMode;
 
@@ -69,6 +72,8 @@ public class GameController : MonoBehaviour {
 
 		targetsDestroyed = 0;
 
+		totalDeaths = 0;
+
 		//respawns = new Queue<RespawnEvent> ();
 
 	}
@@ -95,6 +100,7 @@ public class GameController : MonoBehaviour {
 
 	public void notifyDeath(int playerID, int teamID){
 		numPlayersAliveByTeam [teamID] -= 1;
+		totalDeaths++;
 		if (numPlayersAliveByTeam [teamID] <= 0 && gameMode == GameMode.Survival) {
 			if (teamID == 1) {
 				setGameOver (2);
@@ -138,7 +144,11 @@ public class GameController : MonoBehaviour {
 		gameOver = true;
 		if (gameMode == GameMode.Tutorial) {
 			gameOverText.text = "End of tutorial. Press SQUARE or ENTER to battle!!!";
-		} else {
+		}
+		else if (gameMode == GameMode.Boss){
+			gameOverText.text = "Congratulations!!! Your team defeated the boss losing a total of " + totalDeaths + " lives!! Press SQUARE or ENTER to restart.";
+		}
+		else {
 			if (winner == 1) {
 				gameOverText.text = "Blue team wins!! Press SQUARE or ENTER to restart.";
 			}
@@ -167,6 +177,13 @@ public class GameController : MonoBehaviour {
 			if (Mathf.Abs(randomVector.x) >= respawnDistanceFromCenter || Mathf.Abs(randomVector.y) >= respawnDistanceFromCenter) {
 				return randomVector;
 			}
+		}
+	}
+
+	public void bossDied()
+	{
+		if (gameMode == GameMode.Boss) {
+			setGameOver (1);
 		}
 	}
 

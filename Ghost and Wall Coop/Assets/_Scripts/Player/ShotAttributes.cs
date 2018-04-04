@@ -7,6 +7,7 @@ public class ShotAttributes : MonoBehaviour {
 	private int teamID;
 	private int playerID; 
 	public int damage;
+	public bool energy;
 
 	public int getTeamID(){
 		return teamID;

@@ -97,5 +97,8 @@ public class GhostController : MonoBehaviour {
 			}
 		}
 	}
+	public void resetPosition(){
+		transform.position = new Vector3 (body.transform.position.x, body.transform.position.y, transform.position.z);
+	}
 
 }

@@ -10,7 +10,7 @@ public class ShieldSpawner : MonoBehaviour {
 
 	private List<GameObject> shieldList;
 
-	private int numberShields;
+	public int numberShields;
 
 
 	private bool statusActive;
@@ -18,8 +18,6 @@ public class ShieldSpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		statusActive = false;
-
-		numberShields = 2;
 
 		shieldList = new List<GameObject>() ;
 	}
@@ -40,13 +38,13 @@ public class ShieldSpawner : MonoBehaviour {
 				print (direction);
 				Vector3 shieldPosition = transform.TransformPoint (direction * offsetAsRadiusRatio / 2.0f);
 				GameObject shield = Instantiate<GameObject> (shieldObject, shieldPosition, Quaternion.Euler(0,0, Mathf.Rad2Deg*angle));
-				shield.transform.localScale *= transform.lossyScale.x;
+				shield.transform.localScale *= 3;//transform.lossyScale.x;
 				shield.transform.parent = transform;
 				shieldList.Add (shield);
+				shield.GetComponent<Renderer> ().material = GetComponentInParent<BossController> ().getCurrentMaterial();
 			}
 		}
 		if (!statusActive) {
-			print ("deactivating shields");
 			foreach (GameObject shield in shieldList){
 				Destroy (shield);
 			}

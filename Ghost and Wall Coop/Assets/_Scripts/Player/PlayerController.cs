@@ -43,6 +43,11 @@ public class PlayerController : MonoBehaviour {
 	private float nextRespawnTime;
 	//private Vector3 nextRespawnLocation;
 
+	public float gracePeriod;
+	private float timeLastDamage;
+
+	public Vector3 respawn;
+
 
 	// Use this for initialization
 	void Start () {
@@ -69,6 +74,8 @@ public class PlayerController : MonoBehaviour {
 		isDead = false;
 		isStunned = false;
 		timeRecoverStun = 0.0f;
+
+		timeLastDamage = -10;
 		
 	}
 	
@@ -77,9 +84,17 @@ public class PlayerController : MonoBehaviour {
 		if (!GameController.isGameOver ()) {
 			if (isDead && Time.time >= nextRespawnTime && respawnAllowed) {
 				//transform.parent.gameObject.SetActive (true);
-				Vector2 randomVector = gameController.getRespawnPosition ();
-				transform.parent.transform.position = new Vector3 (randomVector.x, randomVector.y, transform.parent.transform.position.z);
-				transform.position = transform.parent.transform.position;
+				if (gameController.gameMode == GameController.GameMode.Boss) {
+					print ("attempting to respawn");
+					transform.position = respawn;
+					rb.velocity = Vector3.zero;
+					ghost.resetPosition ();
+				} else {
+					//TODO: Respawn code for other game modes is buggy
+					Vector2 randomVector = gameController.getRespawnPosition ();
+					transform.parent.transform.position = new Vector3 (randomVector.x, randomVector.y, transform.parent.transform.position.z);
+					transform.position = transform.parent.transform.position;
+				}
 				currentHealth = maxHealth;
 				healthTracker.setHealth (currentHealth);
 				isDead = false;
@@ -110,6 +125,7 @@ public class PlayerController : MonoBehaviour {
 		return direction;
 	}
 
+	// TODO: refactor this method into a new script so that boss can also shoot
 	private void fireShot (){
 		Vector3 direction = getFireDirection ();
 		float angle = transform.rotation.eulerAngles.z;
@@ -199,11 +215,14 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	//TODO: Implement grace period. Righ now, using OnTriggerEnter, boss can park on top of a cornered player, and using OnTriggerStay, boss insta-kills him
-	void OnTriggerEnter2D(Collider2D col){
+	void OnTriggerStay2D(Collider2D col){
 		if (col.tag == "Shot") {
 			ShotAttributes shot = col.GetComponent<ShotAttributes> ();
-			if (shot.getTeamID() != teamID) {
-				takeDamage (shot.damage);
+			if (shot.getTeamID() != teamID ) {
+				if (!onGracePeriod ()) {
+					takeDamage (shot.damage);
+					timeLastDamage = Time.time;
+				}
 				Destroy (col.gameObject);
 			}
 		}
@@ -218,7 +237,7 @@ public class PlayerController : MonoBehaviour {
 			Destroy (col.gameObject);
 		}
 
-		if (col.tag == "Boss") {
+		if (col.tag == "Boss"  && !onGracePeriod()) {
 			takeDamage (1);
 			isStunned = true;
 			timeRecoverStun = Time.time + timeStunned;
@@ -226,6 +245,8 @@ public class PlayerController : MonoBehaviour {
 			Vector3 offset = transform.position - col.transform.position;
 			Vector3 direction = offset.normalized;
 			rb.velocity = direction * speedStunned;
+
+			timeLastDamage = Time.time;
 
 
 		}
@@ -246,7 +267,9 @@ public class PlayerController : MonoBehaviour {
 		gameController.notifyDeath (playerID, teamID);
 		//Destroy (transform.parent.gameObject);
 		//transform.parent.gameObject.SetActive(false);
-		transform.parent.transform.position = new Vector3(30,30,0);
+		transform.position = new Vector3(30,30,0);
+		ghost.resetPosition ();
+		rb.velocity = Vector3.zero;
 		isDead = true;
 		setRespawn();
 	}
@@ -261,6 +284,10 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//transform.parent.transform.position = new Vector3 (Random.Range (-9, 9), Random.Range (-5, 5), transform.position.z);
+	}
+
+	bool onGracePeriod(){
+		return (Time.time <= (timeLastDamage + gracePeriod));
 	}
 
 }

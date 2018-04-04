@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angularSpeed: 90
-  moveSpeed: 10
+  moveSpeed: 15
   body: {fileID: 1208883301368038}
   cooldown: 1
 --- !u!114 &114516018040113906
@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4b691b34b964feaa40035b96e58681, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 6
   ghostObject: {fileID: 1795845927082592}
   shot: {fileID: 1869922709552740, guid: 579faeaeddf0e442786514404f943ffa, type: 2}
   shotSpeed: 15
@@ -391,8 +391,10 @@ MonoBehaviour:
   playerID: 1
   teamID: 1
   maxHealth: 6
-  timeStunned: 0.4
+  timeStunned: 0.1
   speedStunned: 20
+  gracePeriod: 0.5
+  respawn: {x: -6, y: 3, z: 0}
 --- !u!114 &114843121671840472
 MonoBehaviour:
   m_ObjectHideFlags: 1
